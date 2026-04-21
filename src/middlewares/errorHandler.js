@@ -1,7 +1,7 @@
 const logger = require('../utils/logger');
 
 function errorHandler(err, req, res, next) {
-    // 🔥 Structured logging (include more context)
+    // Structured logging 
     logger.error({
         msg: "Request error",
         error: err.message,
@@ -11,7 +11,7 @@ function errorHandler(err, req, res, next) {
         ip: req.ip
     });
 
-    // 🔥 Map known errors → HTTP status
+    // Map known errors → HTTP status
     const statusMap = {
         INVALID_URL: 400,
         INVALID_ALIAS: 400,
@@ -22,10 +22,10 @@ function errorHandler(err, req, res, next) {
         ALIAS_EXISTS: 409
     };
 
-    // 🔥 Prefer explicit statusCode if present (future-proof)
+    // Prefer explicit statusCode if present
     const status = err.statusCode || statusMap[err.message] || 500;
 
-    // 🔥 Avoid leaking internal errors in production
+    // Avoid leaking internal errors in production
     const isProduction = process.env.NODE_ENV === 'production';
 
     res.status(status).json({
