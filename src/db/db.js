@@ -4,23 +4,23 @@ const logger = require('../utils/logger');
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
 
-    // 🔥 Connection pool tuning
+    // Connection pool tuning
     max: 20, // max concurrent connections
     idleTimeoutMillis: 30000, // close idle clients after 30s
     connectionTimeoutMillis: 5000, // fail fast if DB is unreachable
 
-    // 🔥 Optional: SSL for production (safe fallback)
+    // SSL for production (safe fallback)
     ssl: process.env.DB_SSL === 'true'
         ? { rejectUnauthorized: false }
         : false
 });
 
-// 🔹 Log successful connection (once)
+// Log successful connection (once)
 pool.on('connect', () => {
     logger.info("PostgreSQL connected");
 });
 
-// 🔹 Log errors on idle clients
+// Log errors on idle clients
 pool.on('error', (err) => {
     logger.error({
         msg: "Unexpected DB error",
@@ -28,7 +28,7 @@ pool.on('error', (err) => {
     });
 });
 
-// 🔹 Graceful shutdown (VERY IMPORTANT)
+// Graceful shutdown
 async function shutdown() {
     try {
         await pool.end();
@@ -41,7 +41,7 @@ async function shutdown() {
     }
 }
 
-// 🔹 Handle process termination
+// Handle process termination
 process.on('SIGINT', shutdown);
 process.on('SIGTERM', shutdown);
 
