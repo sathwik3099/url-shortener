@@ -4,7 +4,7 @@ const app = express();
 
 const logger = require('./utils/logger');
 
-// 🔌 Redis init
+// Redis init
 const { connectRedis } = require('./cache/redisClient');
 
 // Middlewares
@@ -15,16 +15,16 @@ const rateLimiter = require('./middlewares/rateLimiter');
 const routes = require('./routes/urlRoutes');
 const errorHandler = require('./middlewares/errorHandler');
 
-// 🔥 Trust proxy (important for correct IP behind load balancers)
+// Trust proxy (for correct IP behind load balancers)
 app.set('trust proxy', true);
 
-// 🔥 Background jobs (run only if enabled)
+// Background jobs (only if enabled)
 if (process.env.RUN_CRON === 'true') {
     require('./jobs/cleanupJobs');
     logger.info("Cron jobs enabled");
 }
 
-// 🔥 Analytics worker (runs in background)
+// Analytics worker (background)
 require('./workers/analyticsWorker');
 
 // Middleware
@@ -35,10 +35,10 @@ app.use(rateLimiter);
 // Routes
 app.use('/', routes);
 
-// Error handler (always last)
+// Error handler
 app.use(errorHandler);
 
-// 🔥 Start server only after Redis attempt
+// Start server after redis
 async function startServer() {
     try {
         await connectRedis();
