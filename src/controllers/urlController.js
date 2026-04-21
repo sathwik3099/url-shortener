@@ -2,7 +2,7 @@ const service = require('../services/urlService');
 const { success } = require('../utils/apiResponse');
 const logger = require('../utils/logger');
 
-// 🔹 POST /shorten
+// POST /shorten
 async function createShortUrl(req, res, next) {
     try {
         const { url, customAlias, expiresAt } = req.body;
@@ -33,7 +33,7 @@ async function createShortUrl(req, res, next) {
     }
 }
 
-// 🔹 GET /:shortCode
+// GET /:shortCode
 async function redirectUrl(req, res, next) {
     try {
         const { shortCode } = req.params;
@@ -47,14 +47,14 @@ async function redirectUrl(req, res, next) {
 
         const originalUrl = await service.getOriginalUrl(shortCode);
 
-        // 🔥 Optional: structured log for redirects (high-value metric)
+       
         logger.info({
             msg: "Redirect",
             shortCode,
             ip: req.ip
         });
 
-        // ⚠️ Redirect responses are NOT wrapped
+      
         return res.redirect(302, originalUrl);
 
     } catch (err) {
@@ -62,7 +62,7 @@ async function redirectUrl(req, res, next) {
     }
 }
 
-// 🔹 GET /analytics/:shortCode
+// GET /analytics/:shortCode
 async function getAnalytics(req, res, next) {
     try {
         const { shortCode } = req.params;
@@ -87,7 +87,7 @@ async function getAnalytics(req, res, next) {
     }
 }
 
-// 🔹 DELETE /:shortCode
+// DELETE /:shortCode
 async function deleteUrl(req, res, next) {
     try {
         const { shortCode } = req.params;
