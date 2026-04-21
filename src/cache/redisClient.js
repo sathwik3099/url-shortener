@@ -20,27 +20,23 @@ const client = createClient({
     }
 });
 
-// 🔹 Error event
 client.on('error', (err) => {
     logger.error({ msg: "Redis error", error: err.message });
     redisAvailable = false;
     lastFailureTime = Date.now();
 });
 
-// 🔹 Successful connection
 client.on('ready', () => {
     logger.info("Redis ready");
     redisAvailable = true;
     lastFailureTime = null;
 });
 
-// 🔹 Connection closed
 client.on('end', () => {
     logger.warn("Redis connection closed");
     redisAvailable = false;
 });
 
-// 🔹 Initial connect
 async function connectRedis() {
     try {
         if (!client.isOpen) {
@@ -53,7 +49,6 @@ async function connectRedis() {
     }
 }
 
-// 🔹 Health check (with cooldown retry)
 function isRedisAvailable() {
     // Try re-enabling Redis after cooldown (circuit breaker reset)
     if (!redisAvailable && lastFailureTime) {
