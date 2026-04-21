@@ -7,7 +7,7 @@ const logger = require('../utils/logger');
 
 const HOT_THRESHOLD = 10;
 
-// 🔹 CREATE SHORT URL
+// CREATE SHORT URL
 async function shortenUrl({ originalUrl, customAlias, expiresAt }) {
     if (!originalUrl || !isValidUrl(originalUrl)) {
         throw new Error("INVALID_URL");
@@ -17,7 +17,7 @@ async function shortenUrl({ originalUrl, customAlias, expiresAt }) {
         throw new Error("INVALID_EXPIRY");
     }
 
-    // 🔹 Custom Alias
+    // Custom Alias
     if (customAlias) {
         if (!isValidAlias(customAlias)) {
             throw new Error("INVALID_ALIAS");
@@ -38,21 +38,21 @@ async function shortenUrl({ originalUrl, customAlias, expiresAt }) {
         }
     }
 
-    // 🔹 Auto-generated
+    // Auto-generated
     const id = await repo.insertWithId(originalUrl, expiresAt);
     const shortCode = encode(id);
 
     return await repo.updateShortCode(id, shortCode);
 }
 
-// 🔹 GET ORIGINAL URL (CACHE + HOT OPTIMIZATION + ANALYTICS)
+// GET ORIGINAL URL (CACHE + HOT OPTIMIZATION + ANALYTICS)
 async function getOriginalUrl(shortCode) {
     if (!shortCode) throw new Error("INVALID_CODE");
 
     let url = await cache.get(shortCode);
 
     if (url) {
-        // 🔥 Hot key optimization
+        // Hot key optimization
         try {
             const count = await cache.incrementHotCounter(shortCode);
             if (count >= HOT_THRESHOLD) {
@@ -66,7 +66,7 @@ async function getOriginalUrl(shortCode) {
         return url.original_url;
     }
 
-    // 🔹 DB fallback
+    // DB fallback
     url = await repo.getActiveUrlByShortCode(shortCode);
 
     if (!url) throw new Error("NOT_FOUND");
@@ -78,17 +78,17 @@ async function getOriginalUrl(shortCode) {
     return url.original_url;
 }
 
-// 🔹 GET ANALYTICS (basic aggregation placeholder)
+// GET ANALYTICS (basic aggregation placeholder)
 async function getAnalytics(shortCode) {
     if (!shortCode) throw new Error("INVALID_CODE");
 
-    // 🔥 Extend later if needed (aggregation query)
+    // Extend later if needed (aggregation query)
     return {
         message: "Analytics available via DB queries"
     };
 }
 
-// 🔹 DELETE URL
+// DELETE URL
 async function deleteUrl(shortCode) {
     if (!shortCode) throw new Error("INVALID_CODE");
 
@@ -96,7 +96,7 @@ async function deleteUrl(shortCode) {
 
     if (!deleted) throw new Error("NOT_FOUND");
 
-    // 🔥 Cache invalidation
+    // Cache invalidation
     await cache.del(shortCode);
 
     return true;
