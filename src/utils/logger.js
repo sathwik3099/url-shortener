@@ -6,7 +6,7 @@ const logger = pino({
     level: process.env.LOG_LEVEL || 'info',
     timestamp: pino.stdTimeFunctions.isoTime,
 
-    // 🔥 pretty logs in dev, JSON in prod
+    // pretty logs in dev, JSON in prod
     transport: !isProduction
         ? {
               target: 'pino-pretty',
