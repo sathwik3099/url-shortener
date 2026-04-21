@@ -9,7 +9,7 @@ function getKey(ip) {
 }
 
 async function rateLimiter(req, res, next) {
-    // 🔥 Fail-open if Redis unavailable
+    // Fail-open if Redis unavailable
     if (!isRedisAvailable()) return next();
 
     const ip = req.ip;
@@ -17,7 +17,7 @@ async function rateLimiter(req, res, next) {
     const now = Date.now();
 
     try {
-        // 🔥 Use pipeline (MULTI) to reduce round trips
+        // Use pipeline (MULTI) to reduce round trips
         const multi = client.multi();
 
         multi.zRemRangeByScore(key, 0, now - WINDOW_SIZE);
@@ -49,7 +49,7 @@ async function rateLimiter(req, res, next) {
             ip
         });
 
-        // 🔥 Fail-open (system should not break)
+        // Fail-open (system should not break)
         next();
     }
 }
