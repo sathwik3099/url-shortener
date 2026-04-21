@@ -8,7 +8,6 @@ const DEFAULT_TTL = 60 * 60; // 1 hour
 const HOT_TTL = 24 * 60 * 60; // 24 hours
 const HOT_COUNTER_TTL = 60 * 60; // 1 hour (important to avoid memory leak)
 
-// 🔹 Key builders
 function buildKey(shortCode) {
     return `${PREFIX}${shortCode}`;
 }
@@ -17,7 +16,6 @@ function buildHotKey(shortCode) {
     return `${HOT_PREFIX}${shortCode}`;
 }
 
-// 🔹 GET (with fallback)
 async function get(shortCode) {
     if (!isRedisAvailable()) return null;
 
@@ -32,7 +30,6 @@ async function get(shortCode) {
     }
 }
 
-// 🔹 SET (with TTL)
 async function set(shortCode, value, ttl = DEFAULT_TTL) {
     if (!isRedisAvailable()) return;
 
@@ -47,12 +44,10 @@ async function set(shortCode, value, ttl = DEFAULT_TTL) {
     }
 }
 
-// 🔹 HOT CACHE SET (longer TTL)
 async function setHot(shortCode, value) {
     return set(shortCode, value, HOT_TTL);
 }
 
-// 🔹 DELETE (for invalidation)
 async function del(shortCode) {
     if (!isRedisAvailable()) return;
 
@@ -64,7 +59,6 @@ async function del(shortCode) {
     }
 }
 
-// 🔹 Track hot keys (with TTL to prevent memory leak)
 async function incrementHotCounter(shortCode) {
     if (!isRedisAvailable()) return 0;
 
@@ -73,7 +67,6 @@ async function incrementHotCounter(shortCode) {
 
         const count = await client.incr(key);
 
-        // 🔥 Ensure counter expires (VERY IMPORTANT)
         if (count === 1) {
             await client.expire(key, HOT_COUNTER_TTL);
         }
@@ -85,7 +78,6 @@ async function incrementHotCounter(shortCode) {
     }
 }
 
-// 🔹 Decide if URL is hot
 function isHot(count, threshold = 10) {
     return count >= threshold;
 }
