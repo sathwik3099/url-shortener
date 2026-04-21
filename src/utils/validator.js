@@ -4,7 +4,7 @@ function isValidUrl(url) {
     try {
         const parsed = new URL(url);
 
-        // 🔥 allow only http/https
+        // allow only http/https
         return parsed.protocol === 'http:' || parsed.protocol === 'https:';
     } catch {
         return false;
@@ -16,7 +16,7 @@ function isValidAlias(alias) {
 
     const trimmed = alias.trim();
 
-    // 🔥 enforce length + allowed characters
+    // enforce length + allowed characters
     const regex = /^[a-zA-Z0-9_-]{4,10}$/;
     return regex.test(trimmed);
 }
