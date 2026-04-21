@@ -1,7 +1,7 @@
 const logger = require('../utils/logger');
 
 function requestLogger(req, res, next) {
-    const start = process.hrtime.bigint(); // 🔥 high-precision timer
+    const start = process.hrtime.bigint(); // high-precision timer
 
     res.on('finish', () => {
         const end = process.hrtime.bigint();
@@ -18,7 +18,7 @@ function requestLogger(req, res, next) {
         });
     });
 
-    // 🔥 capture aborted requests as well
+    // capture aborted requests as well
     res.on('close', () => {
         if (!res.writableEnded) {
             logger.warn({
