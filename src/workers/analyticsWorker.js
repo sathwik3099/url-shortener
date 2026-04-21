@@ -32,7 +32,7 @@ async function processQueue() {
     }
 }
 
-// 🔥 graceful shutdown support
+// graceful shutdown support
 function shutdown() {
     logger.info("Shutting down analytics worker...");
     process.exit(0);
@@ -41,5 +41,5 @@ function shutdown() {
 process.on('SIGINT', shutdown);
 process.on('SIGTERM', shutdown);
 
-// 🔥 periodic worker
+// periodic worker
 setInterval(processQueue, INTERVAL_MS);
