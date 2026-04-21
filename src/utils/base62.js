@@ -15,7 +15,6 @@ function encode(num) {
     return str;
 }
 
-// 🔹 Optional: decode (useful for debugging / future features)
 function decode(str) {
     let num = 0;
 
