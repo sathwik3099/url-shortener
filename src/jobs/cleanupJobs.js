@@ -5,11 +5,11 @@ const logger = require('../utils/logger');
 
 const ANALYTICS_RETENTION_DAYS = parseInt(process.env.ANALYTICS_RETENTION_DAYS, 10) || 30;
 
-// 🔥 Prevent overlapping runs (important under slow DB / large deletes)
+// Prevent overlapping runs 
 let isUrlCleanupRunning = false;
 let isAnalyticsCleanupRunning = false;
 
-// 🔥 Job 1: Delete expired URLs (every 5 minutes)
+// Job 1: Delete expired URLs (every 5 minutes)
 cron.schedule('*/5 * * * *', async () => {
     if (isUrlCleanupRunning) {
         logger.warn("URL cleanup skipped (previous run still active)");
@@ -28,7 +28,7 @@ cron.schedule('*/5 * * * *', async () => {
     }
 });
 
-// 🔥 Job 2: Clean old analytics (daily at midnight)
+// Job 2: Clean old analytics (daily at midnight)
 cron.schedule('0 0 * * *', async () => {
     if (isAnalyticsCleanupRunning) {
         logger.warn("Analytics cleanup skipped (previous run still active)");
