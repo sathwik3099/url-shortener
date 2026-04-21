@@ -1,7 +1,7 @@
 const pool = require('../db/db');
 const logger = require('../utils/logger');
 
-// 🔹 Use transaction to avoid partial writes
+// Use transaction to avoid partial writes
 async function insertWithId(originalUrl, expiresAt = null) {
     const client = await pool.connect();
 
@@ -45,7 +45,7 @@ async function updateShortCode(id, shortCode) {
     }
 }
 
-// 🔹 Custom alias insert (handles uniqueness at DB level)
+// Custom alias insert (handles uniqueness at DB level)
 async function createWithCustomAlias(originalUrl, customAlias, expiresAt = null) {
     const query = `
         INSERT INTO urls (original_url, short_code, expires_at)
@@ -62,7 +62,7 @@ async function createWithCustomAlias(originalUrl, customAlias, expiresAt = null)
     }
 }
 
-// 🔹 Optimized read query
+// read query
 async function getActiveUrlByShortCode(shortCode) {
     const query = `
         SELECT original_url, expires_at
@@ -81,7 +81,7 @@ async function getActiveUrlByShortCode(shortCode) {
     }
 }
 
-// 🔹 Cleanup expired URLs
+// Cleanup expired URLs
 async function deleteExpiredUrls() {
     const query = `
         DELETE FROM urls
@@ -99,7 +99,7 @@ async function deleteExpiredUrls() {
     }
 }
 
-// 🔹 Delete single URL (used in DELETE API)
+// Delete single URL (used in DELETE API)
 async function deleteByShortCode(shortCode) {
     const query = `
         DELETE FROM urls
